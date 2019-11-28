@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 
 async function download(url, options) {
   let body;
-  const res = await fetch(url);
+  const res = await fetch(url, options);
   if (isJSONresponse(res)) {
     body = await res.json();
   } else {
