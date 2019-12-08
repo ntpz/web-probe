@@ -1,5 +1,6 @@
 const jp = require('jsonpath');
 
+const { fromEntries } = require("./utils");
 
 function extractEntries(spec, data) {
     return extractRows(spec.rows, data).map(row => extractRow(spec.fields, row));
@@ -19,13 +20,6 @@ function extractRow(fieldSpecs, row) {
 
 function extractField(alias, rules, row) {
     return jp.query(row, rules.selector)[0];
-}
-
-function fromEntries(entries) {
-    return Array.from(entries).reduce((obj, [key, value]) => {
-        obj[key] = value
-        return obj
-    }, {});
 }
 
 module.exports = { extractEntries };

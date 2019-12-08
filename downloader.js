@@ -1,3 +1,5 @@
+const { isJSONresponse } = require("./utils");
+
 const fetch = require("node-fetch");
 
 async function download(url, options) {
@@ -11,17 +13,6 @@ async function download(url, options) {
   return body;
 }
 
-function isJSONresponse(res) {
-  return (
-    res &&
-    res.headers &&
-    res.headers.get("content-type") &&
-    typeof res.headers.get("content-type") === "string" &&
-    res.headers.get("content-type").indexOf("application/json") !== -1
-  );
-}
-
 module.exports = {
-  download,
-  isJSONresponse
+  download
 };

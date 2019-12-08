@@ -1,7 +1,7 @@
 const expect = require("chai").expect;
 const nock = require("nock");
 
-const { download, isJSONresponse } = require("../downloader.js");
+const { download } = require("../downloader.js");
 
 const TEST_HOST = "https://fake.host/";
 
@@ -32,10 +32,3 @@ describe("download", () => {
 
 });
 
-
-describe("isJSONresponse", () => {
-  it("Should return true for json response", () => {
-    const response = { headers: new Map([['content-type', 'application/json']]) };
-    expect(isJSONresponse(response)).to.be.true;
-  });
-});
