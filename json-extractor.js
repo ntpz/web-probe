@@ -3,24 +3,30 @@ const jp = require('jsonpath')
 const { fromEntries } = require('./utils')
 
 function extractEntries(spec, data) {
-    return extractRows(spec.rows, data).map(row => extractRow(spec.fields, row))
+    const rows = extractRows(spec.rows, data)
+    return rows.map(row => extractRow(spec.fields, row))
 }
 
 function extractRows(rowSpec, data) {
-    return jp.query(data, rowSpec.selector)[0]
+    const rows = jp.query(data, rowSpec.selector)
+    if(rows.length > 0) {
+        return rows[0]
+    } else {
+        return []
+    }
 }
 
 function extractRow(fieldSpecs, row) {
     const fieldSpecsArray = Object.entries(fieldSpecs)
     const fieldValuesArray = fieldSpecsArray.map(([alias, rules]) => [
         alias,
-        extractField(alias, rules, row),
+        extractField(rules, row, alias),
     ])
     return fromEntries(fieldValuesArray)
 }
 
-function extractField(alias, rules, row) {
-    return jp.query(row, rules.selector)[0]
+function extractField(rules, data, alias = 'unnamed') {
+    return jp.query(data, rules.selector)[0]
 }
 
-module.exports = { extractEntries }
+module.exports = { extractEntries, extractField }
