@@ -9,10 +9,14 @@ function extractEntries(spec, data) {
 
 function extractRows(rowSpec, data) {
     const rows = jp.query(data, rowSpec.selector)
-    if(rows.length > 0) {
+    if (rows.length === 0) {
+        return []
+    }
+
+    if (Array.isArray(rows[0])) {
         return rows[0]
     } else {
-        return []
+        return rows
     }
 }
 

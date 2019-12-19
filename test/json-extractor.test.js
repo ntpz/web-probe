@@ -58,6 +58,27 @@ describe('JSON extractor', () => {
         expect(result).to.deep.include({ name: 'Bob', age: 43 })
     })
 
+    it('Works if row selector selects non-list', () => {
+        const data = {
+            persons: {
+                name: 'Alice',
+            },
+        }
+
+        spec = {
+            rows: { selector: '$.persons' },
+            fields: {
+                name: { selector: '$.name' },
+            },
+        }
+
+        const result = extractEntries(spec, data)
+        expect(result)
+            .to.be.array()
+            .ofSize(1)
+        expect(result[0]).to.eql({ name: 'Alice' })
+    })
+
     it('Extracts single field according to rules', () => {
         const rules = { selector: '$.answer' }
         const data = { answer: 42 }
