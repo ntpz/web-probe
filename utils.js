@@ -15,4 +15,14 @@ function fromEntries(entries) {
     }, {})
 }
 
-module.exports = { fromEntries, isJSONresponse }
+
+function* pageOffsets(numItems, pageSize, overlap = 0) {
+    const realSize = pageSize - overlap,
+        numPages = Math.ceil(numItems / realSize) + 1
+    for (let i = 0; i < numPages; i++) {
+        yield realSize * i
+    }
+}
+
+
+module.exports = { fromEntries, isJSONresponse, pageOffsets }

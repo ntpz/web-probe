@@ -1,14 +1,23 @@
+const { pageOffsets } = require('./utils')
+
 async function probe(download, extractor, spec) {
     if (spec.num_items) {
         const indexSpec = spec.num_items
-        response = await download(indexSpec.download.url)
-        numItems = extractor.extractField(indexSpec.extract, response)
+        let response = await download(
+            indexSpec.download.url,
+            indexSpec.download.options
+        )
+
+        const numItems = extractor.extractField(indexSpec.extract, response)
+
         const urls = Array.from(
             pageOffsets(numItems, spec.items_per_page)
         ).map(offs => spec.download.url.replace('%OFFSET%', offs))
+
         const responses = await Promise.all(
-            urls.map(async url => download(url, {}))
+            urls.map(async url => download(url, spec.download.options))
         )
+
         chunks = responses.map(res =>
             extractor.extractEntries(spec.extract, res)
         )
@@ -16,14 +25,6 @@ async function probe(download, extractor, spec) {
     } else {
         const response = await download(spec.download.url, {})
         return extractor.extractEntries(spec.extract, response)
-    }
-}
-
-function* pageOffsets(numItems, pageSize, overlap = 0) {
-    const realSize = pageSize - overlap,
-        numPages = Math.ceil(numItems / realSize) + 1
-    for (let i = 0; i < numPages; i++) {
-        yield realSize * i
     }
 }
 
