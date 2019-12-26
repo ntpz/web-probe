@@ -54,7 +54,12 @@ describe('Probe', () => {
         const spec = {
             num_items: {
                 download: { url: `${TEST_HOST}` },
-                extract: { selector: '$.total_items' },
+                extract: {
+                    rows: { selector: '$' },
+                    fields: {
+                        numItems: { selector: '$.total_items' },
+                    },
+                },
             },
             items_per_page: 1,
             download: { url: `${TEST_HOST}?offset=%OFFSET%` },
